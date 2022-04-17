@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public struct cube {
     public int q, r, s;
@@ -12,6 +13,14 @@ public struct cube {
         this.q = q;
         this.r = r;
         this.s = s;
+    }
+
+    public cube(string s) {
+        s = s.Replace(' ', '\0');
+        string[] d = s.Split('|');
+        this.q = int.Parse(d[0].Split('=').Last());
+        this.r = int.Parse(d[1].Split('=').Last());
+        this.s = int.Parse(d[2].Split('=').Last());
     }
 
     public cube getNeighbor(hexDirection direction) {
@@ -111,4 +120,6 @@ public struct cube {
         long C = (long)((A >= B ? A * A + A + B : A + B * B) / 2);
         return (int) (q < 0 && r < 0 || q >= 0 && r >= 0 ? C : -C - 1);
     }
+
+    public override string ToString() => $"q={q} | r={r} | s={s}";
 }

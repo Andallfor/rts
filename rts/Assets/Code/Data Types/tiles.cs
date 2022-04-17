@@ -23,6 +23,10 @@ public abstract class ITile : ITileGenerationRule {
     public void remove() {
         GameObject.Destroy(model);
     }
+
+    public void forceSetHealth(float f) {this.health = f;}
+    public void forceSetDefense(float d) {this.defense = d;}
+    public void forceSetShield(float s) {this.shield = s;}
 }
 
 public struct tileActionData {
