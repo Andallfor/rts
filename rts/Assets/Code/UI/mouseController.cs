@@ -86,11 +86,8 @@ public class mouseController : MonoBehaviour
                 if (ti.level == currentHighlight.level && ti.position == currentHighlight.pos) stillSelecting = true;
             }
 
-            if (!stillSelecting) {
-                selectedHex = null;
-                uiti.closeMenu();
-                clearHighlight();
-            } else {
+            if (!stillSelecting) closeTileInfoMenu();
+            else {
                 // if we have yet to select anything
                 if (selectedHex is null) {
                     // select the tile
@@ -100,11 +97,8 @@ public class mouseController : MonoBehaviour
                     // if there is a tile below the current tile, select it
                     // if there is not, deselect it
                     hex below = master.map[selectedHex.pos].levels.FirstOrDefault(x => x.Key < selectedHex.level).Value;
-                    if (below is null) {
-                        selectedHex = null;
-                        uiti.closeMenu();
-                        clearHighlight();
-                    } else {
+                    if (below is null) closeTileInfoMenu();
+                    else {
                         selectedHex = below;
                         uiti.openMenu(selectedHex);
                     }
@@ -116,6 +110,12 @@ public class mouseController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void closeTileInfoMenu() {
+        selectedHex = null;
+        uiti.closeMenu();
+        clearHighlight();
     }
 
     private void highlight(hex h) {
