@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 public class mouseController : MonoBehaviour
 {
-    public Vector3 lastMousePosition, lastMousePanPosition;
-    public Vector2 cameraDefaultPosition = new Vector2(40, 40);
-    public tileGameObjectInfo currentHighlight;
-    public List<hex> affectedHighlights = new List<hex>();
-    public float highlightHeightIncrease = 0.5f;
-    public int currentCameraAngleIndex = 0;
+    private Vector3 lastMousePosition, lastMousePanPosition;
+    private Vector2 cameraDefaultPosition = new Vector2(40, 40);
+    private hex currentHighlight;
+    private List<hex> affectedHighlights = new List<hex>();
+    public UITileInfo uiti;
+    public hex selectedHex;
+    private float highlightHeightIncrease = 0.5f;
+    private int currentCameraAngleIndex = 0;
     private float[] angles = new float[12] {0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330};
     public void Start() {
         setCameraAngle(0);
@@ -20,7 +23,7 @@ public class mouseController : MonoBehaviour
         // mouse is hovering over a tile, raise it to "highlight" it
         // TODO: implement actual highlighting?
 
-        if (lastMousePosition != Input.mousePosition) {
+        if (lastMousePosition != Input.mousePosition && selectedHex is null) {
             if (!EventSystem.current.IsPointerOverGameObject()) {
                 // check if we are hitting anything
                 Ray r = uiHelper.camera.ScreenPointToRay(Input.mousePosition);
@@ -28,11 +31,11 @@ public class mouseController : MonoBehaviour
                 if (Physics.Raycast(r, out hit)) {
                     tileGameObjectInfo ti = hit.transform.gameObject.GetComponent<tileGameObjectInfo>();
                     if (!(currentHighlight is null)) {
-                        if (ti.position != currentHighlight.position || ti.level != currentHighlight.level) {
+                        if (ti.position != currentHighlight.pos || ti.level != currentHighlight.level) {
                             clearHighlight();
-                            highlight(ti);
+                            highlight(ti.parent);
                         }
-                    } else highlight(ti);
+                    } else highlight(ti.parent);
                 }
             }
 
@@ -71,15 +74,57 @@ public class mouseController : MonoBehaviour
 
             setCameraAngle(angles[currentCameraAngleIndex]);
         }
+
+        // selecting tile
+        if (Input.GetMouseButtonUp(0) && currentHighlight is hex && !EventSystem.current.IsPointerOverGameObject()) {
+            // check if were still mousing over the same tile, if not then deselect
+            Ray r = uiHelper.camera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            bool stillSelecting = false;
+            if (Physics.Raycast(r, out hit)) {
+                tileGameObjectInfo ti = hit.transform.gameObject.GetComponent<tileGameObjectInfo>();
+                if (ti.level == currentHighlight.level && ti.position == currentHighlight.pos) stillSelecting = true;
+            }
+
+            if (!stillSelecting) {
+                selectedHex = null;
+                uiti.closeMenu();
+                clearHighlight();
+            } else {
+                // if we have yet to select anything
+                if (selectedHex is null) {
+                    // select the tile
+                    selectedHex = currentHighlight;
+                    uiti.openMenu(selectedHex);
+                } else { // we have already selected something
+                    // if there is a tile below the current tile, select it
+                    // if there is not, deselect it
+                    hex below = master.map[selectedHex.pos].levels.FirstOrDefault(x => x.Key < selectedHex.level).Value;
+                    if (below is null) {
+                        selectedHex = null;
+                        uiti.closeMenu();
+                        clearHighlight();
+                    } else {
+                        selectedHex = below;
+                        uiti.openMenu(selectedHex);
+                    }
+                }
+
+                if (selectedHex is hex) {
+                    clearHighlight();
+                    highlight(selectedHex);
+                }
+            }
+        }
     }
 
-    private void highlight(tileGameObjectInfo ti) {
-        currentHighlight = ti;
+    private void highlight(hex h) {
+        currentHighlight = h;
 
         // if we highlight something, make sure we also highlight everything above to prevent meshes intersecting each other
-        column c = master.map[ti.position];
+        column c = master.map[h.pos];
         foreach (KeyValuePair<int, hex> level in c.levels) {
-            if (level.Key >= ti.level) {
+            if (level.Key >= h.level) {
                 affectedHighlights.Add(level.Value);
                 level.Value.model.transform.position += new Vector3(0, highlightHeightIncrease, 0);
             }

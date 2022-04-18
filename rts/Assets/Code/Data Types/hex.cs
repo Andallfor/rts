@@ -21,14 +21,19 @@ public class hex {
     private float width, height, vertDist, horzDist;
     public int level {get; private set;}
     private ITile tile;
+    public int team {get; private set;}
+    /* #region values to retrieve from tile */
     public string name {get => tile.name;}
     public tileType type {get => tile.type;}
     public int levelHeight {get => tile.levelHeight;}
-    public int team {get; private set;}
     public float health {get => tile.health;}
     public float defense {get => tile.defense;}
     public float shield {get => tile.shield;}
+    public float maxHealth {get => tile.maxHealth;}
+    public float maxDefense {get => tile.maxDefense;}
+    public float maxShield {get => tile.maxShield;}
     public GameObject model {get => tile.model;}
+    /* #endregion */
 
     public hex(float size, cube position, int level, ITile tile, int team) {
         this.size = size;

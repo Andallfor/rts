@@ -623,9 +623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e81259f480308c7428cccd332729f22c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lastMousePosition: {x: 0, y: 0, z: 0}
-  currentHighlight: {fileID: 0}
-  highlightHeightIncrease: 0.5
+  uiti: {fileID: 1538017175}
 --- !u!1 &258961051
 GameObject:
   m_ObjectHideFlags: 0
@@ -1261,7 +1259,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 362483597}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1538017175}
+        m_TargetAssemblyTypeName: UITileInfo, Assembly-CSharp
+        m_MethodName: closeMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &362483597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3441,10 +3451,10 @@ RectTransform:
   m_Father: {fileID: 1818462742}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -197.5, y: 44.103035}
-  m_SizeDelta: {x: 305, y: 851.7941}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 180, y: 45}
+  m_SizeDelta: {x: 405, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1538017173
 MonoBehaviour:
@@ -3496,6 +3506,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ccfd96301d2be54eab9ae19f4891dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOpen: 0
+  tilePanel: {fileID: 1538017172}
+  title: {fileID: 491990862}
+  healthCount: {fileID: 147542349}
+  defenseCount: {fileID: 761263213}
+  shieldCount: {fileID: 339407215}
+  healthSlider: {fileID: 319359516}
+  defenseSlider: {fileID: 340210146}
+  shieldSlider: {fileID: 341179470}
+  display: {fileID: 1246349106}
 --- !u!1 &1572230262
 GameObject:
   m_ObjectHideFlags: 0

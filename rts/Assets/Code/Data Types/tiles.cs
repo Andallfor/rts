@@ -9,8 +9,11 @@ public abstract class ITile : ITileGenerationRule {
 
     public string name {get; protected set;}
     public float health {get; protected set;}
+    public float maxHealth {get; protected set;}
     public float defense {get; protected set;}
+    public float maxDefense {get; protected set;}
     public float shield {get; protected set;}
+    public float maxShield {get; protected set;}
     public GameObject model {get; protected set;}
 
     public abstract void action(tileActionData data);
@@ -22,6 +25,12 @@ public abstract class ITile : ITileGenerationRule {
 
     public void remove() {
         GameObject.Destroy(model);
+    }
+
+    protected void init() {
+        health = maxHealth;
+        defense = maxDefense;
+        shield = maxShield;
     }
 
     public void forceSetHealth(float f) {this.health = f;}
@@ -43,13 +52,15 @@ public class ocean : ITile {
         modelPrefab = Resources.Load("Tiles/hex_water") as GameObject;
         type = tileType.water;
 
-        health = 0;
-        defense = 0;
-        shield = 0;
+        maxHealth = 0;
+        maxDefense = 0;
+        maxShield = 0;
 
         whitelist = new List<generationRestrictionData>() {"", tileType.water};
         blacklist = new List<generationRestrictionData>();
         levelHeight = 4;
+
+        base.init();
     }
 
     public override void action(tileActionData data) {
@@ -67,13 +78,15 @@ public class grass : ITile {
         modelPrefab = Resources.Load("Tiles/hex_forest") as GameObject;
         type = tileType.ground;
 
-        health = 0;
-        defense = 0;
-        shield = 0;
+        maxHealth = 0;
+        maxDefense = 0;
+        maxShield = 0;
 
         whitelist = new List<generationRestrictionData>() {tileType.ground};
         blacklist = new List<generationRestrictionData>() {};
         levelHeight = 4;
+
+        base.init();
     }
 
     public override void action(tileActionData data) {
@@ -91,13 +104,15 @@ public class mountain : ITile {
         modelPrefab = Resources.Load("Objects/mountain") as GameObject;
         type = tileType.obstacle;
 
-        health = 100;
-        defense = 25;
-        shield = 0;
+        maxHealth = 100;
+        maxDefense = 25;
+        maxShield = 0;
 
         whitelist = new List<generationRestrictionData>() {tileType.ground};
         blacklist = new List<generationRestrictionData>() {};
         levelHeight = 4;
+
+        base.init();
     }
 
     public override void action(tileActionData data) {
@@ -115,13 +130,15 @@ public class dirt : ITile {
         modelPrefab = Resources.Load("Tiles/hex_rock") as GameObject;
         type = tileType.ground;
 
-        health = 150;
-        defense = 25;
-        shield = 0;
+        maxHealth = 150;
+        maxDefense = 25;
+        maxShield = 0;
 
         whitelist = new List<generationRestrictionData>() {tileType.ground};
         blacklist = new List<generationRestrictionData>() {};
         levelHeight = 4;
+
+        base.init();
     }
 
     public override void action(tileActionData data) {
@@ -139,13 +156,15 @@ public class forest : ITile {
         modelPrefab = Resources.Load("Objects/forest") as GameObject;
         type = tileType.resource;
 
-        health = 15;
-        defense = 0;
-        shield = 0;
+        maxHealth = 15;
+        maxDefense = 0;
+        maxShield = 0;
 
         whitelist = new List<generationRestrictionData>() {"forest", "grass"};
         blacklist = new List<generationRestrictionData>() {};
         levelHeight = 4;
+
+        base.init();
     }
 
     public override void action(tileActionData data) {
