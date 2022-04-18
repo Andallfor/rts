@@ -28,6 +28,7 @@ public class hex {
     public float health {get => tile.health;}
     public float defense {get => tile.defense;}
     public float shield {get => tile.shield;}
+    public GameObject model {get => tile.model;}
 
     public hex(float size, cube position, int level, ITile tile, int team) {
         this.size = size;
@@ -67,6 +68,11 @@ public class hex {
 
         tile.model.transform.position = worldPos;
         tile.model.transform.parent = GameObject.FindGameObjectWithTag("generatedObjects/map").transform;
+        MeshCollider mc = tile.model.AddComponent(typeof(MeshCollider)) as MeshCollider;
+        tileGameObjectInfo ti = tile.model.AddComponent(typeof(tileGameObjectInfo)) as tileGameObjectInfo;
+        ti.position = this.pos;
+        ti.level = this.level;
+        ti.parent = this;
     }
 
     public void remove() {

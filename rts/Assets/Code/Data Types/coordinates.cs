@@ -110,6 +110,18 @@ public struct cube {
     public static cube operator+(cube c1, cube c2) => new cube(c1.q + c2.q, c1.r + c2.r, c1.s + c2.s);
     public static cube operator-(cube c1, cube c2) => new cube(c1.q - c2.q, c1.r - c2.r, c1.s - c2.s);
 
+    public static bool operator==(cube p1, cube p2) => (p1.q == p2.q && p1.r == p2.r && p1.s == p2.s);
+    public static bool operator!=(cube p1, cube p2) => (p1.q != p2.q || p1.r != p2.r || p1.s != p2.s);
+
+    public override bool Equals(object obj)
+    {
+        if (obj is cube) {
+            return (cube) obj == this;
+        }
+
+        return false;
+    }
+
     public static implicit operator cube(Vector3Int v) => new cube(v.x, v.y, v.z);
     public static implicit operator Vector3Int(cube c) => new Vector3Int(c.q, c.r, c.s);
 
