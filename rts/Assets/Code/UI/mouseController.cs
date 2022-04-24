@@ -9,6 +9,8 @@ public static class mouseController
     private static Vector3 lastMousePosition, lastMousePanPosition;
     private static Vector2 cameraDefaultPosition = new Vector2(40, 40);
     private static hex currentHighlight;
+    private static MeshRenderer highlightMr;
+    private static List<Color> ogColors = new List<Color>();
     private static List<hex> affectedHighlights = new List<hex>();
     public static UITileInfo uiti;
     public static hex selectedHex;
@@ -121,6 +123,12 @@ public static class mouseController
 
     public static void highlight(hex h) {
         currentHighlight = h;
+        highlightMr = currentHighlight.model.GetComponent<MeshRenderer>();
+
+        foreach (Material m in highlightMr.materials) {
+            ogColors.Add(m.color);
+            m.color = new Color(m.color.r + 0.25f, m.color.g + 0.25f, m.color.b + 0.25f, m.color.a);
+        }
 
         // if we highlight something, make sure we also highlight everything above to prevent meshes intersecting each other
         column c = master.map[h.pos];
@@ -137,7 +145,16 @@ public static class mouseController
             he.model.transform.position -= new Vector3(0, highlightHeightIncrease, 0);
         }
 
+        if (ogColors.Count != 0) {
+            int index = 0;
+            foreach (Material m in highlightMr.materials) {
+                m.color = ogColors[index];
+                index++;
+            }
+        }
+
         affectedHighlights = new List<hex>();
+        ogColors = new List<Color>();
     }
 
     public static void setCameraAngle(float angle) {
