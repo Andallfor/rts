@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - generatedObjects/map
+  - ui/right/tileInfo
   layers:
   - Default
   - TransparentFX

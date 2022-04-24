@@ -12,6 +12,8 @@ public class UITileInfo : MonoBehaviour
     public RectTransform tilePanel;
     public TextMeshProUGUI title, healthCount, defenseCount, shieldCount;
     public Slider healthSlider, defenseSlider, shieldSlider;
+    public GameObject actionParent, actionPrefab;
+    private List<GameObject> displayedActions = new List<GameObject>();
     public RawImage display;
 
     // TODO: figure out a good way to implement multiple types of actions
@@ -33,9 +35,44 @@ public class UITileInfo : MonoBehaviour
         healthSlider.value = h.health / h.maxHealth;
         defenseSlider.value = h.defense / h.maxDefense;
         shieldSlider.value = h.shield / h.maxShield;
+
+        currentlySelected = h;
+
+        // load in possible actions
+        int index = 0;
+        foreach (ITileAction ta in h.possibleActions) {
+            addNewAction(ta, new Vector2(-88, -25 + index * 40));
+            index++;
+        }
+    }
+
+    private GameObject addNewAction(ITileAction ta, Vector2 position) {
+        GameObject go = GameObject.Instantiate(actionPrefab, actionParent.transform);
+        go.GetComponent<RectTransform>().anchoredPosition = position;
+        UITileAction uta = go.GetComponent<UITileAction>();
+        uta.button.interactable = ta.canRunAction(currentlySelected);
+        uta.gold.text = ta.cost.gold.ToString();
+        uta.iron.text = ta.cost.iron.ToString();
+        uta.wood.text = ta.cost.wood.ToString();
+        uta.food.text = ta.cost.food.ToString();
+
+        uta.buttonName.text = ta.displayName;
+
+        uta.button.onClick.RemoveAllListeners();
+        uta.button.onClick.AddListener(() => {
+            ta.action(currentlySelected, new object[0]);
+            mouseController.closeTileInfoMenu();
+        });
+
+        displayedActions.Add(go);
+
+        return go;
     }
 
     public void closeMenu() {
         tilePanel.anchoredPosition = new Vector2(180, 45);
+        foreach (GameObject go in displayedActions) {
+            Destroy(go);
+        }
     }
 }

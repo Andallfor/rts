@@ -7,19 +7,40 @@ using System.Text;
 public class player : NetworkBehaviour
 {
     public void Update() {
-        if (!isLocalPlayer) return;
-
-        
+        if (isLocalPlayer && isClient) {
+            mouseController.update();
+        }
     }
 
     public override void OnStartClient() {
-        if (!isLocalPlayer || !isClientOnly) return;
+        if (isLocalPlayer) {
+            mouseController.init();
+            mouseController.setCameraAngle(0);
+            master.localPlayer = this;
+        }
 
-        CmdRequestMapFromServer(this.gameObject);
+        if (isLocalPlayer && isClientOnly) CmdRequestMapFromServer(this.gameObject);
+    }
+
+    public void syncAction(hex h, string name, string args) {
+        CmdSyncAction(h.pos.ToString(), h.level, name, args);
     }
 
     [Command]
-    public void CmdRequestMapFromServer(GameObject sender) {
+    private void CmdSyncAction(string pos, int level, string name, string args) {
+        RpcSyncAction(pos, level, name, args);
+    }
+
+    [ClientRpc]
+    private void RpcSyncAction(string pos, int level, string name, string args) {
+        cube c = new cube(pos);
+        hex h = master.map[c][level];
+        ITileAction ta = h.possibleActions.Find(x => x.name == name);
+        ta.actuallyRunAction(h, ta.deserialzeArgs(args));
+    }
+
+    [Command]
+    private void CmdRequestMapFromServer(GameObject sender) {
         // unable to send such a large arg at once so split into multi calls
         string data = master.serializeMap();
         int size = ASCIIEncoding.Unicode.GetByteCount(data);
@@ -44,7 +65,7 @@ public class player : NetworkBehaviour
     }
 
     [TargetRpc]
-    public void TargetGenerateMap(NetworkConnection target, string map) {
+    private void TargetGenerateMap(NetworkConnection target, string map) {
         master.deserializeMap(map);
     }
 
@@ -78,7 +99,7 @@ public class player : NetworkBehaviour
             Vector3 v3 = new Vector3(c.q, c.r, 1);
             Vector3 _v3 = new Vector3(c.q, c.r, 5);
 
-            if (height <= -0.15 && master.map[c].allowedToGenerate(5, 4)) {
+            if (height <= -0.15 && master.registeredTiles.Find(x => x.name == "forest").canTileGenerate(c, 5)) {
                 new hex(master.size, c, 5, new forest(), 0);
             }
         }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+// TODO: make children into a singleton? 
+// have health and whatnot be part of hex instead of the tile
 public abstract class ITile : ITileGenerationRule {
     public GameObject modelPrefab {get; protected set;}
     public tileType type {get; protected set;}
@@ -14,18 +16,10 @@ public abstract class ITile : ITileGenerationRule {
     public float maxDefense {get; protected set;}
     public float shield {get; protected set;}
     public float maxShield {get; protected set;}
-    public GameObject model {get; protected set;}
+    public List<ITileAction> possibleActions = new List<ITileAction>();
 
     public abstract void action(tileActionData data);
     public abstract float hit(tileHitData data);
-    public GameObject instTile() {
-        this.model = GameObject.Instantiate(modelPrefab);
-        return this.model;
-    }
-
-    public void remove() {
-        GameObject.Destroy(model);
-    }
 
     protected void init() {
         health = maxHealth;
@@ -58,6 +52,7 @@ public class ocean : ITile {
 
         whitelist = new List<generationRestrictionData>() {"", tileType.water};
         blacklist = new List<generationRestrictionData>();
+        possibleActions = new List<ITileAction>();
         levelHeight = 4;
 
         base.init();
@@ -84,6 +79,7 @@ public class grass : ITile {
 
         whitelist = new List<generationRestrictionData>() {tileType.ground};
         blacklist = new List<generationRestrictionData>() {};
+        possibleActions = new List<ITileAction>() {growTree.instance};
         levelHeight = 4;
 
         base.init();
@@ -110,6 +106,7 @@ public class mountain : ITile {
 
         whitelist = new List<generationRestrictionData>() {tileType.ground};
         blacklist = new List<generationRestrictionData>() {};
+        possibleActions = new List<ITileAction>();
         levelHeight = 4;
 
         base.init();
@@ -136,6 +133,7 @@ public class dirt : ITile {
 
         whitelist = new List<generationRestrictionData>() {tileType.ground};
         blacklist = new List<generationRestrictionData>() {};
+        possibleActions = new List<ITileAction>() {growTree.instance};
         levelHeight = 4;
 
         base.init();
@@ -162,6 +160,7 @@ public class forest : ITile {
 
         whitelist = new List<generationRestrictionData>() {"forest", "grass"};
         blacklist = new List<generationRestrictionData>() {};
+        possibleActions = new List<ITileAction>();
         levelHeight = 4;
 
         base.init();

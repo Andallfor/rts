@@ -4,22 +4,23 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Linq;
 
-public class mouseController : MonoBehaviour
+public static class mouseController
 {
-    private Vector3 lastMousePosition, lastMousePanPosition;
-    private Vector2 cameraDefaultPosition = new Vector2(40, 40);
-    private hex currentHighlight;
-    private List<hex> affectedHighlights = new List<hex>();
-    public UITileInfo uiti;
-    public hex selectedHex;
-    private float highlightHeightIncrease = 0.5f;
-    private int currentCameraAngleIndex = 0;
-    private float[] angles = new float[12] {0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330};
-    public void Start() {
-        setCameraAngle(0);
+    private static Vector3 lastMousePosition, lastMousePanPosition;
+    private static Vector2 cameraDefaultPosition = new Vector2(40, 40);
+    private static hex currentHighlight;
+    private static List<hex> affectedHighlights = new List<hex>();
+    public static UITileInfo uiti;
+    public static hex selectedHex;
+    private static float highlightHeightIncrease = 0.5f;
+    private static int currentCameraAngleIndex = 0;
+    private static float[] angles = new float[12] {0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330};
+
+    public static void init() {
+        uiti = GameObject.FindGameObjectWithTag("ui/right/tileInfo").GetComponent<UITileInfo>();
     }
 
-    public void Update() {
+    public static void update() {
         // mouse is hovering over a tile, raise it to "highlight" it
         // TODO: implement actual highlighting?
 
@@ -112,13 +113,13 @@ public class mouseController : MonoBehaviour
         }
     }
 
-    public void closeTileInfoMenu() {
+    public static void closeTileInfoMenu() {
         selectedHex = null;
         uiti.closeMenu();
         clearHighlight();
     }
 
-    private void highlight(hex h) {
+    public static void highlight(hex h) {
         currentHighlight = h;
 
         // if we highlight something, make sure we also highlight everything above to prevent meshes intersecting each other
@@ -131,7 +132,7 @@ public class mouseController : MonoBehaviour
         }
     }
 
-    private void clearHighlight() {
+    public static void clearHighlight() {
         foreach (hex he in affectedHighlights) {
             he.model.transform.position -= new Vector3(0, highlightHeightIncrease, 0);
         }
@@ -139,7 +140,7 @@ public class mouseController : MonoBehaviour
         affectedHighlights = new List<hex>();
     }
 
-    private void setCameraAngle(float angle) {
+    public static void setCameraAngle(float angle) {
         uiHelper.camera.transform.position = new Vector3(
             Mathf.Cos(Mathf.Deg2Rad * angle) * cameraDefaultPosition.x,
             cameraDefaultPosition.y,

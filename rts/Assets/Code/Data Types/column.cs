@@ -14,8 +14,10 @@ public class column {
     
     public bool allowedToGenerate(int level, int height) {
         if (level == 0) return true;
-        if (levels.ContainsKey(level)) return false;
-        if (!levels.ContainsKey(level - height)) return false;
+        for (int i = 0; i < height; i++) {
+            if (levels.ContainsKey(level - i)) return false;
+        }
+        
         return true;
     }
 }

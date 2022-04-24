@@ -15,14 +15,16 @@ public class hex {
         }
     }
 
-    // TODO: cleanup vars
     public Vector3 worldPos {get; private set;}
+    public int level {get; private set;}
+    public int team {get; private set;}
+    public resources inventory {get; private set;}
+
     private cube _pos;
     private float width, height, vertDist, horzDist;
-    public int level {get; private set;}
-    private ITile tile;
-    public int team {get; private set;}
     /* #region values to retrieve from tile */
+    private ITile tile;
+    public List<ITileAction> possibleActions {get => tile.possibleActions;}
     public string name {get => tile.name;}
     public tileType type {get => tile.type;}
     public int levelHeight {get => tile.levelHeight;}
@@ -32,9 +34,9 @@ public class hex {
     public float maxHealth {get => tile.maxHealth;}
     public float maxDefense {get => tile.maxDefense;}
     public float maxShield {get => tile.maxShield;}
-    public GameObject model {get => tile.model;}
     /* #endregion */
-
+    public GameObject model;
+    
     public hex(float size, cube position, int level, ITile tile, int team) {
         this.size = size;
         this.level = level;
@@ -69,20 +71,21 @@ public class hex {
 
     private void instTile(ITile tile) {
         this.tile = tile;
-        tile.instTile();
+        this.model = GameObject.Instantiate(tile.modelPrefab);
 
-        tile.model.transform.position = worldPos;
-        tile.model.transform.parent = GameObject.FindGameObjectWithTag("generatedObjects/map").transform;
-        MeshCollider mc = tile.model.AddComponent(typeof(MeshCollider)) as MeshCollider;
-        tileGameObjectInfo ti = tile.model.AddComponent(typeof(tileGameObjectInfo)) as tileGameObjectInfo;
+        model.transform.position = worldPos;
+        model.transform.parent = GameObject.FindGameObjectWithTag("generatedObjects/map").transform;
+        MeshCollider mc = model.AddComponent(typeof(MeshCollider)) as MeshCollider;
+        tileGameObjectInfo ti = model.AddComponent(typeof(tileGameObjectInfo)) as tileGameObjectInfo;
         ti.position = this.pos;
         ti.level = this.level;
         ti.parent = this;
+        ti.vp = new Vector3(this.pos.q, this.pos.r, this.pos.s);
     }
 
     public void remove() {
         master.removeHex(this);
 
-        tile.remove();
+        GameObject.Destroy(model);
     }
 }

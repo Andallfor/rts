@@ -9,6 +9,7 @@ public static class master {
     public static List<ITile> registeredTiles = new List<ITile>() {
         new forest(), new ocean(), new dirt(), new mountain(), new grass()
     };
+    public static player localPlayer;
     public static Dictionary<cube, column> map {get => _map;}
     private static Dictionary<cube, column> _map = new Dictionary<cube, column>();
 

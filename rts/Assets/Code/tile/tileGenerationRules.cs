@@ -7,16 +7,18 @@ public abstract class ITileGenerationRule {
     public List<generationRestrictionData> whitelist {get; protected set;}
     public int levelHeight {get; protected set;}
 
-    public bool canTileGenerate(ITile t, cube pos, int level) {
-        bool canGenerate = master.map[pos].allowedToGenerate(level, levelHeight);
-        if (!canGenerate) return false;
+    public bool canTileGenerate(cube pos, int level) {
+        if (!master.map[pos].allowedToGenerate(level, levelHeight)) return false;
 
         if (blacklist.Count == 0 && whitelist.Count == 0) return true;
 
-        // there can be no other tiles below it
-        if (level <= t.levelHeight) return listContains(whitelist, "") && !listContains(blacklist, ""); // "" represents empty space
+        bool existsBelow = true;
+        if (!master.map[pos].levels.ContainsKey(level - levelHeight)) existsBelow = false;
 
-        hex below = master.map[pos][level - t.levelHeight]; // allowedToGenerate ensures that this tile exists
+        // there can be no other tiles below it
+        if (level <= levelHeight || !existsBelow) return listContains(whitelist, "") && !listContains(blacklist, ""); // "" represents empty space
+
+        hex below = master.map[pos][level - levelHeight]; // allowedToGenerate ensures that this tile exists
 
         // blacklist has priority over whitelist
         // if an element exists in both blacklist and whitelist, then we adhere to blacklist and do not allow the tile to generate
