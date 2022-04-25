@@ -51,7 +51,7 @@ public class hex {
         master.addHex(this, false);
     }
 
-    public hex(string name, int team, int level, float health, float defense, float shield, float size, cube pos) {
+    public hex(string name, teamId team, int level, float health, float defense, float shield, float size, cube pos) {
         this.size = size;
         this.level = level;
         width = 2f * size;

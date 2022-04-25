@@ -61,7 +61,7 @@ public static class master {
             foreach (hex h in c.levels.Values) {
                 sb.AppendLine(
                     $"name:{h.name}~" +
-                    $"team:{h.team}~" +
+                    $"team:{(int) h.team}~" +
                     $"health:{h.health}~" +
                     $"defense:{h.defense}~" +
                     $"shield:{h.shield}~" +
@@ -116,7 +116,8 @@ public static class master {
                 }
             }
 
-            new hex(name, team, level, health, defense, shield, size, pos);
+            new hex(name, (teamId) team, level, health, defense, shield, size, pos);
+            teamController.registerArea(new List<cube>() {pos}, (teamId) team, false);
         }
     }
 

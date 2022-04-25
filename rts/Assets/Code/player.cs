@@ -40,9 +40,29 @@ public class player : NetworkBehaviour
             this.team = (teamId) (GameObject.FindGameObjectsWithTag("Player").Length);
         }
 
-        if (isLocalPlayer && isClientOnly) CmdRequestMapFromServer(this.gameObject);
+        if (isServer && isLocalPlayer) teamController.registerArea(new cube(0, 0, 0).nearby(20), teamId.none);
 
-        teamController.registerArea(new cube(0, 0, 0).nearby(20), teamId.none);
+        if (isLocalPlayer && isClientOnly) {
+            CmdRequestMapFromServer(this.gameObject);
+        }
+    }
+
+    public void syncTeamAffiliation(List<cube> c, teamId id) {
+        List<Vector3> v = new List<Vector3>();
+        foreach (cube _c in c) v.Add(new Vector3(_c.q, _c.r, _c.s));
+        CmdSyncTeamAffiliation(v, (int) id);
+    }
+
+    [Command]
+    private void CmdSyncTeamAffiliation(List<Vector3> c, int id) {
+        RpcSyncTeamAffiliation(c, id);
+    }
+
+    [ClientRpc]
+    private void RpcSyncTeamAffiliation(List<Vector3> v, int id) {
+        List<cube> c = new List<cube>();
+        foreach (Vector3 _v in v) c.Add(new cube((int) _v.x, (int) _v.y, (int) _v.z));
+        teamController.registerArea(c, (teamId) id, false);
     }
 
     public void syncAction(hex h, string name, string args) {
