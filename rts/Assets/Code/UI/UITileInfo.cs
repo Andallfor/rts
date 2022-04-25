@@ -12,6 +12,7 @@ public class UITileInfo : MonoBehaviour
     public RectTransform tilePanel;
     public TextMeshProUGUI title, healthCount, defenseCount, shieldCount;
     public Slider healthSlider, defenseSlider, shieldSlider;
+    public RawImage teamAffiliationImage;
     public GameObject actionParent, actionPrefab;
     private List<GameObject> displayedActions = new List<GameObject>();
     public RawImage display;
@@ -35,6 +36,10 @@ public class UITileInfo : MonoBehaviour
         healthSlider.value = h.health / h.maxHealth;
         defenseSlider.value = h.defense / h.maxDefense;
         shieldSlider.value = h.shield / h.maxShield;
+
+        if (h.team == teamId.none) teamAffiliationImage.texture = Resources.Load("UI/images/uipack/grey_circle") as Texture2D;
+        else if (h.team == teamId.red) teamAffiliationImage.texture = Resources.Load("UI/images/uipack/red_circle") as Texture2D;
+        else if (h.team == teamId.blue) teamAffiliationImage.texture = Resources.Load("UI/images/uipack/blue_circle") as Texture2D;
 
         currentlySelected = h;
 
