@@ -25,6 +25,7 @@ public class growTree : ITileAction
     public override object[] deserialzeArgs(string s) => new object[0];
 
     public override bool canRunAction(hex h) {
+        if (h.team != master.localPlayer.team) return false;
         if (h.inventory < this.cost) return false;
         if (!master.registeredTiles.Find(x => x.name == "forest").canTileGenerate(h.pos, h.level + 4)) return false;
         return true;

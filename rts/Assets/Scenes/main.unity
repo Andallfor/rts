@@ -2198,9 +2198,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1176185318}
-  - component: {fileID: 1176185321}
   - component: {fileID: 1176185320}
   - component: {fileID: 1176185319}
+  - component: {fileID: 1176185321}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -2231,11 +2231,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1176185317}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
+  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetX: 0
-  offsetY: 0
+  dontDestroyOnLoad: 1
+  runInBackground: 1
+  autoStartServerBuild: 1
+  serverTickRate: 30
+  offlineScene: 
+  onlineScene: 
+  transport: {fileID: 1176185320}
+  networkAddress: localhost
+  maxConnections: 100
+  authenticator: {fileID: 0}
+  playerPrefab: {fileID: 2474708406718833235, guid: ed384e3aa3a37ce41bb2d4d53cfb5df3, type: 3}
+  autoCreatePlayer: 1
+  playerSpawnMethod: 0
+  spawnPrefabs: []
 --- !u!114 &1176185320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2274,23 +2286,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1176185317}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
+  m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 1
-  runInBackground: 1
-  autoStartServerBuild: 1
-  serverTickRate: 30
-  offlineScene: 
-  onlineScene: 
-  transport: {fileID: 1176185320}
-  networkAddress: localhost
-  maxConnections: 100
-  authenticator: {fileID: 0}
-  playerPrefab: {fileID: 2474708406718833235, guid: ed384e3aa3a37ce41bb2d4d53cfb5df3, type: 3}
-  autoCreatePlayer: 1
-  playerSpawnMethod: 0
-  spawnPrefabs: []
+  offsetX: 0
+  offsetY: 0
 --- !u!1 &1209269402
 GameObject:
   m_ObjectHideFlags: 0

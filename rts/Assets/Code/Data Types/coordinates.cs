@@ -8,7 +8,7 @@ public struct cube {
     private static readonly cube epsilon = new cube((int) 1e-6, (int) 2e-6, (int) 3e-6);
     public cube(int q, int r, int s) {
         if (q + r + s != 0) {
-            throw new System.Exception($"Given cube coordinates (q: {q}, r: {r}, s: {s}) do to equal 0.");
+            throw new System.Exception($"Given cube coordinates (q: {q}, r: {r}, s: {s}) do not equal 0.");
         }
         this.q = q;
         this.r = r;

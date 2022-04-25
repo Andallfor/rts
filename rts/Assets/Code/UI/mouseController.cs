@@ -22,10 +22,7 @@ public static class mouseController
         uiti = GameObject.FindGameObjectWithTag("ui/right/tileInfo").GetComponent<UITileInfo>();
     }
 
-    public static void update() {
-        // mouse is hovering over a tile, raise it to "highlight" it
-        // TODO: implement actual highlighting?
-
+    private static void updateHighlight() {
         if (lastMousePosition != Input.mousePosition && selectedHex is null) {
             if (!EventSystem.current.IsPointerOverGameObject()) {
                 // check if we are hitting anything
@@ -44,14 +41,16 @@ public static class mouseController
 
             lastMousePosition = Input.mousePosition;
         }
+    }
 
-        // zoom
+    private static void updateZoom() {
         if (Input.mouseScrollDelta.y != 0) {
             float newSize = uiHelper.camera.orthographicSize - Input.mouseScrollDelta.y * 2f;
             uiHelper.camera.orthographicSize = Mathf.Min(Mathf.Max(newSize, 5f), 50f);
         }
+    }
 
-        // camera pan
+    private static void updatePan() {
         if (Input.GetMouseButtonDown(1)) {
             lastMousePanPosition = Input.mousePosition;
         } else if (Input.GetMouseButton(1)) {
@@ -63,8 +62,9 @@ public static class mouseController
                 uiHelper.camera.transform.position += uiHelper.camera.transform.right * difference.x;
             }
         }
+    }
 
-        // switch camera angle
+    private static void updateCameraAngle() {
         if (Input.GetKeyDown("d")) {
             currentCameraAngleIndex += 1;
             if (currentCameraAngleIndex >= angles.Length) currentCameraAngleIndex = 0;
@@ -77,8 +77,9 @@ public static class mouseController
 
             setCameraAngle(angles[currentCameraAngleIndex]);
         }
+    }
 
-        // selecting tile
+    private static void updateTileSelection() {
         if (Input.GetMouseButtonUp(0) && currentHighlight is hex && !EventSystem.current.IsPointerOverGameObject()) {
             // check if were still mousing over the same tile, if not then deselect
             Ray r = uiHelper.camera.ScreenPointToRay(Input.mousePosition);
@@ -113,6 +114,14 @@ public static class mouseController
                 }
             }
         }
+    }
+
+    public static void update() {
+        updateHighlight();
+        updateZoom();
+        updatePan();
+        updateCameraAngle();
+        updateTileSelection();
     }
 
     public static void closeTileInfoMenu() {

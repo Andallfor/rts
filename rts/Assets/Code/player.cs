@@ -1,14 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using Mirror;
 using System.Text;
 
 public class player : NetworkBehaviour
 {
+    public teamId team {get; private set;}
+    private bool alreadyInit = false;
     public void Update() {
         if (isLocalPlayer && isClient) {
             mouseController.update();
+            keyboardController.update();
+        }
+
+        if (isServer) {
+            // testing
+            if (Input.GetKeyUp("space") && !alreadyInit) {
+                alreadyInit = true;
+                Debug.Log("INIT GAME");
+                mouseController.clearHighlight();
+                // red
+                List<cube> area = new cube(-14, 0, 14).nearby(6);
+                teamController.registerArea(area, teamId.red);
+
+                // blue
+                area = new cube(14, 0, -14).nearby(6);
+                teamController.registerArea(area, teamId.blue);
+            }
         }
     }
 
@@ -17,9 +37,12 @@ public class player : NetworkBehaviour
             mouseController.init();
             mouseController.setCameraAngle(0);
             master.localPlayer = this;
+            this.team = (teamId) (GameObject.FindGameObjectsWithTag("Player").Length);
         }
 
         if (isLocalPlayer && isClientOnly) CmdRequestMapFromServer(this.gameObject);
+
+        teamController.registerArea(new cube(0, 0, 0).nearby(20), teamId.none);
     }
 
     public void syncAction(hex h, string name, string args) {

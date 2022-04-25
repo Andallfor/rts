@@ -17,7 +17,7 @@ public class hex {
 
     public Vector3 worldPos {get; private set;}
     public int level {get; private set;}
-    public int team {get; private set;}
+    public teamId team {get; private set;}
     public resources inventory {get; private set;}
 
     private cube _pos;
@@ -81,11 +81,17 @@ public class hex {
         ti.level = this.level;
         ti.parent = this;
         ti.vp = new Vector3(this.pos.q, this.pos.r, this.pos.s);
+
+        this.setTeam(0);
     }
 
     public void remove() {
         master.removeHex(this);
 
         GameObject.Destroy(model);
+    }
+
+    public void setTeam(teamId t) {
+        this.team = t;
     }
 }
