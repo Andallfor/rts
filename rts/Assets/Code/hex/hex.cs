@@ -37,7 +37,7 @@ public class hex {
     /* #endregion */
     public GameObject model;
     
-    public hex(float size, cube position, int level, ITile tile, int team) {
+    public hex(float size, cube position, int level, ITile tile, teamId team) {
         this.size = size;
         this.level = level;
         width = 2f * size;
@@ -93,5 +93,9 @@ public class hex {
 
     public void setTeam(teamId t) {
         this.team = t;
+    }
+
+    public void setInventory(resources r) {
+        this.inventory = r;
     }
 }

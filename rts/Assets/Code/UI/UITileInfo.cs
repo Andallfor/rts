@@ -10,7 +10,7 @@ public class UITileInfo : MonoBehaviour
     public bool isOpen = false;
 
     public RectTransform tilePanel;
-    public TextMeshProUGUI title, healthCount, defenseCount, shieldCount;
+    public TextMeshProUGUI title, healthCount, defenseCount, shieldCount, gold, iron, wood, food;
     public Slider healthSlider, defenseSlider, shieldSlider;
     public RawImage teamAffiliationImage;
     public GameObject actionParent, actionPrefab;
@@ -40,6 +40,11 @@ public class UITileInfo : MonoBehaviour
         if (h.team == teamId.none) teamAffiliationImage.texture = Resources.Load("UI/images/uipack/grey_circle") as Texture2D;
         else if (h.team == teamId.red) teamAffiliationImage.texture = Resources.Load("UI/images/uipack/red_circle") as Texture2D;
         else if (h.team == teamId.blue) teamAffiliationImage.texture = Resources.Load("UI/images/uipack/blue_circle") as Texture2D;
+
+        gold.text = h.inventory.gold.ToString();
+        wood.text = h.inventory.wood.ToString();
+        iron.text = h.inventory.iron.ToString();
+        food.text = h.inventory.food.ToString();
 
         currentlySelected = h;
 

@@ -25,7 +25,6 @@ public static class teamController
                 foreach (hex h in master.map[c].levels.Values) {
                     h.setTeam(t);
                 }
-                
 
                 ownedTiles[t].Add(c);
                 tileKey[c] = t;

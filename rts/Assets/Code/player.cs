@@ -25,9 +25,17 @@ public class player : NetworkBehaviour
                 List<cube> area = new cube(-14, 0, 14).nearby(6);
                 teamController.registerArea(area, teamId.red);
 
+                master.removeColumn(new cube(-14, 0, 14));
+                new hex(master.size, new cube(-14, 0, 14), 1, new grass(), teamId.red);
+                new hex(master.size, new cube(-14, 0, 14), 5, new castle(), teamId.red).setInventory(new resources(0, 10, 50, 30));
+
                 // blue
                 area = new cube(14, 0, -14).nearby(6);
                 teamController.registerArea(area, teamId.blue);
+
+                master.removeColumn(new cube(14, 0, -14));
+                new hex(master.size, new cube(14, 0, -14), 1, new grass(), teamId.blue);
+                new hex(master.size, new cube(14, 0, -14), 5, new castle(), teamId.blue).setInventory(new resources(0, 10, 50, 30));
             }
         }
     }

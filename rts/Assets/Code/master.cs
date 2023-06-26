@@ -7,7 +7,7 @@ using System.Linq;
 
 public static class master {
     public static List<ITile> registeredTiles = new List<ITile>() {
-        new forest(), new ocean(), new dirt(), new mountain(), new grass()
+        new forest(), new ocean(), new dirt(), new mountain(), new grass(), new castle()
     };
     public static player localPlayer;
     public static Dictionary<cube, column> map {get => _map;}
@@ -40,6 +40,14 @@ public static class master {
     /// <summary> note: uses h.pos as the key </summary>
     public static void removeHex(hex h) {
         _map[h.pos].levels.Remove(h.level);
+    }
+
+    public static void removeColumn(cube c) {
+        List<hex> hCopy = new List<hex>(_map[c].levels.Values);
+        foreach (hex h in hCopy) {
+            h.remove();
+        }
+        _map[c] = new column();
     }
 
     public static string serializeMap() {
